@@ -6,34 +6,34 @@
                 <form enctype="multipart/form-data">
                     <div class="form-group">
                     <label for="agencia">Agência</label>
-                    <select v-on:change="mudarAgencia" name="agencia" class="form-control" type="text">
-                        <option value="dks">DKS</option>
+                    <select v-on:change="mudarAgencia" name="agencia" class="form-control" type="text" v-model="agencia">
+                        <option selected value="dks">DKS</option>
                         <option value="vmo">VMO</option>
                         <option value="glw">GLW</option>
                     </select>
                     </div>
                     <div class="form-group">
                         <label for="demandante">Demandante</label>
-                        <input name="demandante" class="form-control" type="text"/>
+                        <input name="demandante" class="form-control" type="text" v-model="demandante"/>
                     </div>
                     <div class="form-group">
                         <label for="material">Material solicitado</label>
-                        <input name="material" class="form-control" type="text"/>
+                        <input name="material" class="form-control" type="text" v-model="material"/>
                     </div>
                     <div class="form-group">
                         <label for="data-limite">Data limite para entrega</label>
-                        <input name="data-limite" class="form-control" type="text"/>
+                        <input name="data-limite" class="form-control" type="text" v-model="dataLimite"/>
                     </div>
                     <div class="form-group">
                         <label for="comentario">Comente sobre a solicitação</label>
-                        <textarea name="comentario" class="form-control"/>
+                        <textarea name="comentario" class="form-control" v-model="comentario"/>
                     </div>
                     <div class="form-group">
                         <label for="arquivos">Fazer upload dos arquivos</label>
                         <input name="arquivos" type="file" accept=".png, .jpg, .jpeg"/>
                     </div>
                     <div class="btn-center">
-                        <button type="submit" class="btn btn-primary">ENVIAR SOLICITAÇÃO</button>
+                        <button type="submit" class="btn btn-primary" v-on:click="enviarDados">ENVIAR SOLICITAÇÃO</button>
                     </div>
                 </form>
             </main>
@@ -46,10 +46,16 @@ import dks from '../assets/dks.png';
 import vmo from '../assets/vmo.png';
 import glw from '../assets/glw.png';
 
+import axios from 'axios';
+
 export default {
     data(){
         return {
-
+            agencia: '',
+            demandante: '',
+            material: '',
+            dataLimite: '',
+            comentario: ''
         }
     },
 
@@ -80,6 +86,13 @@ export default {
                 }
             }
         },
+
+        enviarDados(event){
+            event.preventDefault();
+            const data = {
+
+            }
+        }
     }
 
 }
