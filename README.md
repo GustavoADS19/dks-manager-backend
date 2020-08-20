@@ -1,3 +1,4 @@
+<img width="200" src="https://i.ibb.co/fxfSTF1/dks.png">
 <h1>DKS Manager</h1>
 <p>Com o frontend desenvolvido em Vue e o backend desenvolvido em NodeJS, esta ferramenta visa facilitar a vida dos colaboradores internos a abrirem chamados de demanda.</p>
 <p>O usuário terá o seu painel, onde ele vai poder ver:</p>
@@ -9,7 +10,12 @@
 <br/>
 <p>Juntamente com o painel, existirá uma tela onde o próprio usuário pode abrir um chamado, seguindo com a mesma sequência de campos ditos anteriormente.</p>
 <h1>Comandos NPM e documentação</h1>
+<h3>Setup inicial</h3>
 <p>A partir do momento que você fizer o pull request, você terá duas pastas na qual você precisa executar a instalação dos módulos do NodeJS. Sendo elas o <strong>web</strong> e o <strong>server</strong>.</p>
 <code>npm install</code>
 <p>Assim que fizer este procedimento, você pode começar a programar tanto no código do backend quanto no do frontend.</p>
-<p>
+<h3>Backend</h3>
+<code>npm start</code>
+<p>Comando utilizado durante produção para fazer a aplicação operar.</p>
+<code>npm run-script dev</code>
+<p>Para um dinamismo maior na hora de editar os arquivos do seu backend e ver as mudanças mais rapidamente sem ter que reiniciá-lo, este comando visa adiantar este processo de forma automática.</p>
