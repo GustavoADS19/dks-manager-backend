@@ -11,10 +11,9 @@
 <p>Juntamente com o painel, existirá uma tela onde o próprio usuário pode abrir um chamado, seguindo com a mesma sequência de campos ditos anteriormente.</p>
 <h1>Comandos NPM e documentação</h1>
 <h3>Setup inicial</h3>
-<p>A partir do momento que você fizer o pull request, você terá duas pastas na qual você precisa executar a instalação dos módulos do NodeJS. Sendo elas o <strong>web</strong> e o <strong>server</strong>.</p>
+<p>A partir do momento que você fizer o pull request, você precisa executar a instalação dos módulos do NodeJS.
 <code>npm install</code>
-<p>Assim que fizer este procedimento, você pode começar a programar tanto no código do backend quanto no do frontend.</p>
-<h3>Backend</h3>
+<p>Assim que fizer este procedimento, você pode começar a programar no código do backend.</p>
 <code>npm start</code>
 <p>Comando utilizado durante produção para fazer a aplicação operar.</p>
 <code>npm run-script dev</code>
