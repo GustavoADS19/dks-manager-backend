@@ -1,0 +1,5 @@
+{
+    "database": {
+        "uri": "mongodb+srv://dks:dkseventos2020@dks-cluster.kvg9v.mongodb.net/dks-manager?retryWrites=true&w=majority"
+    }
+}
