@@ -6,7 +6,8 @@ const DemandSchema = new mongoose.Schema({
     demandado: String,
     material: String,
     dataLimite: String,
-    comentario: String
+    comentario: String,
+    status: String,
 });
 
 const UserModel = mongoose.model("demands", DemandSchema);
