@@ -1,6 +1,17 @@
 const express = require("express");
 const crypto = require("crypto");
 const path = require("path");
+const multer = require("multer");
+
+const uploadImage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "./public/images" + req.body.material);
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
+})
+
 const routes = express.Router();
 
 const DemandController = require("./database/models/DemandModel");
@@ -12,7 +23,7 @@ routes.get("/demands", (request, response) => {
     });
 });
 
-routes.post("/register-demand", (request, response) => {
+routes.post("/register-demand", multer({storage: uploadImage}).array("anexo"), (request, response) => {
     const data = request.body;
 
     const agencia = data.agencia;
@@ -100,6 +111,20 @@ routes.post("/auth", (request, response) => {
         } else {
             response.send({ authenticated: false });
         }
+    });
+});
+
+routes.post("/users", (request, response) => {
+    UserController.find().select('-password -authToken -_id').lean().exec((err, docs) => {
+        response.send(docs);
+    });
+});
+
+routes.post("/user", (request, response) => {
+    const userMail = request.body.userMail;
+
+    UserController.find({ email: userMail }).select('-password -authToken -_id').lean().exec((err, docs) => {
+        response.send(docs);
     });
 });
 
