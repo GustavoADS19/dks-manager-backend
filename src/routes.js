@@ -55,10 +55,11 @@ routes.post("/register-demand", multer({storage: uploadImage}).array("anexo"), (
 routes.post("/create-user", (request, response) => {
     const name = request.body.name;
     const email = request.body.email;
-    const password = request.body.password;
+    const password = crypto.createHash('sha1');
+    password.update(request.body.password);
     const whatsapp = request.body.whatsapp;
 
-    const data = { name, email, password, whatsapp, verifiedMail: false, authToken: '' };
+    const data = { name, email, password: password.digest('hex'), whatsapp, verifiedMail: false, authToken: '' };
     const user = new UserController(data);
     user.save((err, doc) => {
         if (err) {
@@ -71,6 +72,9 @@ routes.post("/create-user", (request, response) => {
 
 routes.post("/login", (request, response) => {
     UserController.find({ email: request.body.email }).lean().exec((err, docs) => {
+        const password = crypto.createHash('sha1');
+        password.update(request.body.password);
+
         if (err) {
             response.status(400).send("Bad request.");
             return;
@@ -81,7 +85,7 @@ routes.post("/login", (request, response) => {
             return;
         }
 
-        if (docs[0].password == request.body.password) {
+        if (docs[0].password == password.digest('hex')) {
             const generatedToken = crypto.randomBytes(32).toString('hex');
             UserController.updateOne({ _id: docs[0]._id }, { authToken: generatedToken }, (err, raw) => {
                 if (err) {
