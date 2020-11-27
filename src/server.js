@@ -16,7 +16,7 @@ const port = process.env.PORT || 3333;
 
 //Middlewares (express)
 app.use(cors());
-app.use(express.static(path.join(__dirname, "../", "web", "dist")));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(routes);
 

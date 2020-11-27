@@ -18,7 +18,7 @@ routes.get("/demands", (request, response) => {
 routes.post("/register-demand", async (request, response) => {
     const id = crypto.randomBytes(32).toString("hex");
     var anexoPath = ``;
-    const uploadImage = multer.diskStorage({
+    const uploadImage = await multer.diskStorage({
         destination: function (req, file, cb) {
             const demandPath = path.join(__dirname, "public", "images", id);
             fs.access(demandPath, error => {
@@ -36,9 +36,9 @@ routes.post("/register-demand", async (request, response) => {
         }
     });
 
-    const anexoUpload = multer({
+    const anexoUpload = await multer({
         storage: uploadImage,
-        limits: { fileSize: 1000000 },
+        limits: { fileSize: 8000000 },
     }).single("demandImage");
 
     await anexoUpload(request, response, (err) => {
