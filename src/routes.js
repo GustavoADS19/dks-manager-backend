@@ -1,16 +1,8 @@
 const express = require("express");
 const crypto = require("crypto");
 const path = require("path");
+const fs = require("fs");
 const multer = require("multer");
-
-const uploadImage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "./public/images" + req.body.material);
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
-    }
-})
 
 const routes = express.Router();
 
@@ -23,32 +15,69 @@ routes.get("/demands", (request, response) => {
     });
 });
 
-routes.post("/register-demand", multer({storage: uploadImage}).array("anexo"), (request, response) => {
-    const data = request.body;
-
-    const agencia = data.agencia;
-    const demandante = data.demandante;
-    const demandado = data.demandado;
-    const material = data.material;
-    const dataLimite = data.dataLimite;
-    const comentario = data.comentario;
-
-    const demand = new DemandController({
-        agencia,
-        demandante,
-        demandado,
-        material,
-        dataLimite,
-        comentario,
-        status: "Em análise"
+routes.post("/register-demand", async (request, response) => {
+    const id = crypto.randomBytes(32).toString("hex");
+    var anexoPath = ``;
+    const uploadImage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            const demandPath = path.join(__dirname, "public", "images", id);
+            fs.access(demandPath, error => {
+                if (error) {
+                    fs.mkdir(demandPath, error => {
+                        return cb(error, demandPath);
+                    });
+                }
+                return cb(null, demandPath);
+            });
+        },
+        filename: function (req, file, cb) {
+            anexoPath = `images/${id}/anexo${path.extname(file.originalname)}`;
+            cb(null, "anexo" + path.extname(file.originalname));
+        }
     });
 
-    demand.save((err, doc) => {
+    const anexoUpload = multer({
+        storage: uploadImage,
+        limits: { fileSize: 1000000 },
+    }).single("demandImage");
+
+    await anexoUpload(request, response, (err) => {
         if (err) {
-            throw err;
+            console.log(err);
+            response.status(500).send({ message: "Image upload failed." });
+            return;
         }
 
-        response.status(201).send({ message: "Demand uploaded successfully." });
+        const data = request.body;
+
+        const agencia = data.agencia;
+        const demandante = data.demandante;
+        const demandado = data.demandado;
+        const material = data.material;
+        const dataLimite = data.dataLimite;
+        const comentario = data.comentario;
+
+        const demand = new DemandController({
+            id,
+            agencia,
+            demandante,
+            demandado,
+            material,
+            dataLimite,
+            comentario,
+            status: "Em análise",
+            anexoPath
+        });
+
+        demand.save((err, doc) => {
+            if (err) {
+                throw err;
+            }
+
+            response.status(201).send({ message: "Demand uploaded successfully." });
+        });
+
+        console.log("Uploaded");
     });
 });
 
@@ -130,6 +159,10 @@ routes.post("/user", (request, response) => {
     UserController.find({ email: userMail }).select('-password -authToken -_id').lean().exec((err, docs) => {
         response.send(docs);
     });
+});
+
+routes.post("/photo", (request, response) => {
+
 });
 
 routes.post("/*", (request, response) => {
