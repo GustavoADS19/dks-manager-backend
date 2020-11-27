@@ -44,7 +44,7 @@ routes.post("/register-demand", async (request, response) => {
     await anexoUpload(request, response, (err) => {
         if (err) {
             console.log(err);
-            response.status(500).send({ message: "Image upload failed." });
+            response.status(500).send({ message: "Image upload failed.", error: err });
             return;
         }
 
