@@ -18,6 +18,8 @@ routes.get("/demands", (request, response) => {
 routes.post("/register-demand", async (request, response) => {
     const id = crypto.randomBytes(32).toString("hex");
     var anexoPath = ``;
+
+    /*
     const uploadImage = await multer.diskStorage({
         destination: function (req, file, cb) {
             const demandPath = path.join(__dirname, "public-files", "images", id);
@@ -46,6 +48,7 @@ routes.post("/register-demand", async (request, response) => {
         response.status(500).send({ message: "Image upload failed.", error: err });
         return;
     }
+    */
 
     const data = request.body;
 
@@ -65,7 +68,7 @@ routes.post("/register-demand", async (request, response) => {
         dataLimite,
         comentario,
         status: "Em análise",
-        anexoPath
+        anexoPath: ""
     });
 
     demand.save((err, doc) => {
