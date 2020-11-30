@@ -20,7 +20,7 @@ routes.post("/register-demand", async (request, response) => {
     var anexoPath = ``;
     const uploadImage = await multer.diskStorage({
         destination: function (req, file, cb) {
-            const demandPath = path.join(__dirname, "public", "images", id);
+            const demandPath = path.join(__dirname, "public-files", "images", id);
             fs.access(demandPath, error => {
                 if (error) {
                     fs.mkdir(demandPath, error => {
