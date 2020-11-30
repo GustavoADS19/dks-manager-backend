@@ -41,43 +41,39 @@ routes.post("/register-demand", async (request, response) => {
         limits: { fileSize: 8000000 },
     }).single("demandImage");
 
-    await anexoUpload(request, response, (err) => {
+    if (err) {
+        console.log(err);
+        response.status(500).send({ message: "Image upload failed.", error: err });
+        return;
+    }
+
+    const data = request.body;
+
+    const agencia = data.agencia;
+    const demandante = data.demandante;
+    const demandado = data.demandado;
+    const material = data.material;
+    const dataLimite = data.dataLimite;
+    const comentario = data.comentario;
+
+    const demand = new DemandController({
+        id,
+        agencia,
+        demandante,
+        demandado,
+        material,
+        dataLimite,
+        comentario,
+        status: "Em análise",
+        anexoPath
+    });
+
+    demand.save((err, doc) => {
         if (err) {
-            console.log(err);
-            response.status(500).send({ message: "Image upload failed.", error: err });
-            return;
+            throw err;
         }
 
-        const data = request.body;
-
-        const agencia = data.agencia;
-        const demandante = data.demandante;
-        const demandado = data.demandado;
-        const material = data.material;
-        const dataLimite = data.dataLimite;
-        const comentario = data.comentario;
-
-        const demand = new DemandController({
-            id,
-            agencia,
-            demandante,
-            demandado,
-            material,
-            dataLimite,
-            comentario,
-            status: "Em análise",
-            anexoPath
-        });
-
-        demand.save((err, doc) => {
-            if (err) {
-                throw err;
-            }
-
-            response.status(201).send({ message: "Demand uploaded successfully." });
-        });
-
-        console.log("Uploaded");
+        response.status(201).send({ message: "Demand uploaded successfully." });
     });
 });
 
