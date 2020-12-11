@@ -9,7 +9,10 @@ const DemandSchema = new mongoose.Schema({
     dataLimite: String,
     comentario: String,
     status: String,
-    anexoPath: String
+    dataDeCriacao: Date,
+    anexo: {
+        dados: Buffer
+    } 
 });
 
 const UserModel = mongoose.model("demands", DemandSchema);

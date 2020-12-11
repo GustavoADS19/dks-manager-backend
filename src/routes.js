@@ -15,40 +15,15 @@ routes.get("/demands", (request, response) => {
     });
 });
 
+routes.get("/anexo/:id", (request, response) => {
+    DemandController.findOne({ id: request.params.id }).lean().exec((err, docs) => {
+        response.send(docs.anexo);
+    });
+});
+
 routes.post("/register-demand", async (request, response) => {
     const id = crypto.randomBytes(32).toString("hex");
     var anexoPath = ``;
-
-    /*
-    const uploadImage = await multer.diskStorage({
-        destination: function (req, file, cb) {
-            const demandPath = path.join(__dirname, "public-files", "images", id);
-            fs.access(demandPath, error => {
-                if (error) {
-                    fs.mkdir(demandPath, error => {
-                        return cb(error, demandPath);
-                    });
-                }
-                return cb(null, demandPath);
-            });
-        },
-        filename: function (req, file, cb) {
-            anexoPath = `images/${id}/anexo${path.extname(file.originalname)}`;
-            cb(null, "anexo" + path.extname(file.originalname));
-        }
-    });
-
-    const anexoUpload = await multer({
-        storage: uploadImage,
-        limits: { fileSize: 8000000 },
-    }).single("demandImage");
-
-    if (err) {
-        console.log(err);
-        response.status(500).send({ message: "Image upload failed.", error: err });
-        return;
-    }
-    */
 
     const data = request.body;
 
@@ -68,7 +43,10 @@ routes.post("/register-demand", async (request, response) => {
         dataLimite,
         comentario,
         status: "Em análise",
-        anexoPath: ""
+        dataDeCriacao: new Date().toLocaleDateString('pt-BR'),
+        anexo: {
+            dados: request.body.anexoData
+        }
     });
 
     demand.save((err, doc) => {
@@ -158,10 +136,6 @@ routes.post("/user", (request, response) => {
     UserController.find({ email: userMail }).select('-password -authToken -_id').lean().exec((err, docs) => {
         response.send(docs);
     });
-});
-
-routes.post("/photo", (request, response) => {
-
 });
 
 routes.post("/*", (request, response) => {
