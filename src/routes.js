@@ -10,9 +10,15 @@ const DemandController = require("./database/models/DemandModel");
 const UserController = require("./database/models/UserModel");
 
 routes.get("/demands", (request, response) => {
-    DemandController.find().lean().exec((err, docs) => {
-        response.send(docs);
-    });
+    if (request.query.email) {
+        DemandController.find({demandado: request.query.email}).lean().exec((err, docs) => {
+            response.send(docs);
+        });
+    } else {
+        DemandController.find().lean().exec((err, docs) => {
+            response.send(docs);
+        });
+    }
 });
 
 routes.get("/anexo/:id", (request, response) => {
