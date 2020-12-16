@@ -144,6 +144,12 @@ routes.post("/user", (request, response) => {
     });
 });
 
+routes.post("/update-demand", (request, response) => {
+    DemandController.findOneAndUpdate({ id: request.body.id }, { status: request.body.status }).lean().exec((err, docs) => {
+        response.send(docs);
+    });
+});
+
 routes.post("/*", (request, response) => {
     response.status(404).send({message: "Cannot POST since route does not exist."});
 });
