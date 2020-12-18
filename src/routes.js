@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
+const xlsx = require("json-as-xlsx");
 
 const routes = express.Router();
 
@@ -152,6 +153,58 @@ routes.post("/update-demand", (request, response) => {
 
 routes.post("/*", (request, response) => {
     response.status(404).send({message: "Cannot POST since route does not exist."});
+});
+
+routes.get("/download-demands", async (request, response) => {
+    const columns = [
+        {
+            label: 'Agência',
+            value: 'agencia'
+        },
+        {
+            label: 'Demandante',
+            value: 'demandante'
+        },
+        {
+            label: 'Demandado',
+            value: 'demandado'
+        },
+        {
+            label: 'Material',
+            value: 'material'
+        },
+        {
+            label: 'Data Limite',
+            value: 'dataLimite'
+        },
+        {
+            label: 'Comentário',
+            value: 'comentario'
+        },
+        {
+            label: 'Status',
+            value: 'status'
+        },
+        {
+            label: 'Data de Criação',
+            value: 'dataDeCriacao'
+        }
+    ];
+
+    DemandController.find().lean().exec((err, docs) => {
+        const values = docs;
+        
+        const settings = {
+            sheetName: 'Lista de Demandas',
+            fileName: 'Demandas',
+            extraLength: 5,
+            writeOptions: {}
+        }
+
+        xlsx(columns, values, settings, true);
+
+        response.download(path.join(__dirname, "../", "Demandas.xlsx"), "Demandas.xlsx");
+    });
 });
 
 module.exports = routes;
